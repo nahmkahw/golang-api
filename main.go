@@ -7,14 +7,33 @@ import (
 )
 
 func main() {
+	// Disable Console Color
+	// gin.DisableConsoleColor()
 
-	r := gin.Default()
+	// Creates a gin router with default middleware:
+	// logger and recovery (crash-free) middleware
+	router := gin.Default()
 
-	r.GET("/hello", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "World",
-		})
-	})
+	router.GET("/student", getStudent)
+	router.POST("/student", addStudent)
+	router.PUT("/student", updateStudent)
+	router.DELETE("/student", deleteStudent)
 
-	r.Run(":9000") // listen and serve on 0.0.0.0:8080
+	router.Run(":9000")
+}
+
+func getStudent(c *gin.Context) {
+	c.String(http.StatusOK, "get Student")
+}
+
+func addStudent(c *gin.Context) {
+	c.String(http.StatusOK, "add Student")
+}
+
+func updateStudent(c *gin.Context) {
+	c.String(http.StatusOK, "update Student")
+}
+
+func deleteStudent(c *gin.Context) {
+	c.String(http.StatusOK, "delete Student")
 }
