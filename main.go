@@ -1,21 +1,25 @@
 package main
 
-import (
-	"github.com/gin-gonic/gin"
-)
+import "github.com/gin-gonic/gin"
 
 func main() {
-	// Disable Console Color
-	// gin.DisableConsoleColor()
-
-	// Creates a gin router with default middleware:
-	// logger and recovery (crash-free) middleware
 	router := gin.Default()
+	// Simple group: public
+	routerpublic := router.Group("/public")
+	{
+		routerpublic.POST("/login", login)
+		routerpublic.POST("/logout", logout)
+	}
 
-	router.GET("/student/:id", getStudent)
-	router.POST("/student", addStudent)
-	router.PUT("/student", updateStudent)
-	router.DELETE("/student", deleteStudent)
+	// Simple group: private
+	routerstudent := router.Group("/private")
+	{
+		routerstudent.GET("/student/:id", getStudent)
+		routerstudent.POST("/student", addStudent)
+		routerstudent.PUT("/student", updateStudent)
+		routerstudent.DELETE("/student", deleteStudent)
+	}
 
 	router.Run(":9000")
+
 }
