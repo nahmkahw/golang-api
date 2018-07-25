@@ -40,7 +40,9 @@ func main() {
 	}
 
 	// Simple group: private
-	routerstudent := router.Group("/student")
+	private := router.Group("/private")
+
+	routerstudent := private.Group("/student")
 	{
 		routerstudent.GET("/", FetchAllStudent(db))
 		routerstudent.GET("/:id", Fetchstudent(db))
