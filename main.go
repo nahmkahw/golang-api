@@ -1,8 +1,27 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"database/sql"
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
+)
+
+var Mysupersecretpassword = "nahmkahw@gmail.com"
 
 func main() {
+
+	db, err := sql.Open("mysql", "gouser:golang@tcp(202.41.160.101:4406)/barcode?charset=utf8")
+	if err != nil {
+		panic("failed to connect database")
+	} else {
+		fmt.Println("connect database success.")
+	}
+	defer db.Close()
+	db.SetMaxOpenConns(3)
+	db.SetMaxIdleConns(3)
+
 	router := gin.Default()
 
 	// Global middleware
@@ -16,17 +35,18 @@ func main() {
 	// Simple group: public
 	routerpublic := router.Group("/public")
 	{
-		routerpublic.POST("/login", login)
-		routerpublic.POST("/logout", logout)
+		routerpublic.POST("/login", login(db))
+		routerpublic.POST("/logout", logout(db))
 	}
 
 	// Simple group: private
 	routerstudent := router.Group("/private")
 	{
-		routerstudent.GET("/student/:id", getStudent)
-		routerstudent.POST("/student", addStudent)
-		routerstudent.PUT("/student", updateStudent)
-		routerstudent.DELETE("/student", deleteStudent)
+		routerstudent.GET("/student/", FetchAllStudent(db))
+		routerstudent.GET("/student/:id", Fetchstudent(db))
+		routerstudent.POST("/student", Createstudent(db))
+		routerstudent.PUT("/student/:id", Updatestudent(db))
+		routerstudent.DELETE("/student/:id", Deletestudent(db))
 	}
 
 	router.Run(":9000")
