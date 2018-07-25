@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/gin-gonic/contrib/jwt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -41,10 +40,7 @@ func main() {
 	}
 
 	// Simple group: private
-	private := router.Group("/private")
-	private.Use(jwt.Auth(Mysupersecretpassword))
-
-	routerstudent := private.Group("/student")
+	routerstudent := router.Group("/student")
 	{
 		routerstudent.GET("/", FetchAllStudent(db))
 		routerstudent.GET("/:id", Fetchstudent(db))
