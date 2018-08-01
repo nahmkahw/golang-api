@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+    prod:
+        build: .
+        ports:
+          - 9002:9000
+        restart: always
